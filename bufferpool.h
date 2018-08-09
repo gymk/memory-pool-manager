@@ -64,7 +64,7 @@ public:
         {
             for(int i = 0; i < _i32MaxBuffers; i++)
             {
-                if(&_pstBuffers[i].m_buffer == pBufferToRelease)
+                if( _pstBuffers[i].m_inUse && (&_pstBuffers[i].m_buffer == pBufferToRelease))
                 {
                     --_i32ConsumedCount;
                     _pstBuffers[i].m_inUse = false;

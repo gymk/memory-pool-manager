@@ -33,6 +33,7 @@ int main()
     Buffer * pTst[MAX_BUFFERS];
     Buffer * pTst2;
 
+    // Check whether able to get all the buffers
     for(int i = 0; i < MAX_BUFFERS; i++)
     {
         pTst[i] = tst.GetBuffer();
@@ -42,17 +43,24 @@ int main()
             std::cout << "No more buffer available. Available " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
     }
 
+    // Check what happens when no more buffer available
     pTst2 = tst.GetBuffer();
     if(pTst2)
         std::cout << "Received buffer " << pTst2 << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
     else
         std::cout << "No more buffer available. Available " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
 
+    // Check count after releasing each buffer
     for(int i = 0; i <= MAX_BUFFERS; i++)
     {
         std::cout << "Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
         tst.ReleaseBuffer(pTst[i]);
     }
+    std::cout << "Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
+    
+    // Check whether trying to release the released buffer cause any side-effect ???
+    tst.ReleaseBuffer(pTst[0]);
+    
     std::cout << "Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
 }
 
@@ -64,17 +72,18 @@ Output:
 [bufferpool.h:void simple_buffer_manager::CFixedSizeBufferPool<T>::InitBufferPool() [with T = tagRequiredBuffer]:Exit]
 [bufferpool.h:simple_buffer_manager::CFixedSizeBufferPool<T>::CFixedSizeBufferPool(int) [with T = tagRequiredBuffer]:Exit]
 Avaialble 5 Consumed 0
-Received buffer 0xa1e110 Avaialble 4 Consumed 1
-Received buffer 0xa1f111 Avaialble 3 Consumed 2
-Received buffer 0xa20112 Avaialble 2 Consumed 3
-Received buffer 0xa21113 Avaialble 1 Consumed 4
-Received buffer 0xa22114 Avaialble 0 Consumed 5
+Received buffer 0x24ae110 Avaialble 4 Consumed 1
+Received buffer 0x24af111 Avaialble 3 Consumed 2
+Received buffer 0x24b0112 Avaialble 2 Consumed 3
+Received buffer 0x24b1113 Avaialble 1 Consumed 4
+Received buffer 0x24b2114 Avaialble 0 Consumed 5
 No more buffer available. Available 0 Consumed 5
 Avaialble 0 Consumed 5
 Avaialble 1 Consumed 4
 Avaialble 2 Consumed 3
 Avaialble 3 Consumed 2
 Avaialble 4 Consumed 1
+Avaialble 5 Consumed 0
 Avaialble 5 Consumed 0
 Avaialble 5 Consumed 0
 [bufferpool.h:simple_buffer_manager::CFixedSizeBufferPool<T>::~CFixedSizeBufferPool() [with T = tagRequiredBuffer]:Enter]
