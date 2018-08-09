@@ -47,6 +47,7 @@ public:
                 if(_pstBuffers[i].m_inUse == false)
                 {
                     _pstBuffers[i].m_inUse = true;
+                    ++_i32ConsumedCount;
                     return &_pstBuffers[i].m_buffer;
                 }
             }
@@ -65,11 +66,21 @@ public:
             {
                 if(&_pstBuffers[i].m_buffer == pBufferToRelease)
                 {
+                    --_i32ConsumedCount;
                     _pstBuffers[i].m_inUse = false;
                     break;
                 }
             }
         }
+    }
+
+    int GetConsumedCount(void)
+    {
+        return _i32ConsumedCount;
+    }
+    int GetAvaiilableCount(void)
+    {
+        return (_i32MaxBuffers - _i32ConsumedCount);
     }
 
 private:
@@ -85,6 +96,7 @@ private:
                 _pstBuffers[i].m_inUse = false;
             }
         }
+        _i32ConsumedCount = 0;
     }
 
     void DestroyBufferPool(void)
@@ -94,6 +106,7 @@ private:
 
 private:
     int                     _i32MaxBuffers;
+    int                     _i32ConsumedCount;
     std::unique_ptr<POOL_BUFFER[]> _pstBuffers;
     std::mutex              _lock;
 };
