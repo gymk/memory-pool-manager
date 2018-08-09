@@ -5,9 +5,9 @@
 
 #include <memory>
 #include <mutex>
-//#include "custom_alloc.h"
-//#include "scopelog.h"
-//#include "timemeasure.h"
+#include "custom_alloc.h"
+#include "scopelog.h"
+#include "timemeasure.h"
 
 /*
 * Requires C++11
@@ -39,6 +39,18 @@ public:
     T* GetBuffer(void)
     {
         std::unique_lock<std::mutex> lc(_lock);
+
+        if(nullptr != _pstBuffers)
+        {
+            for(int i = 0; i < _i32MaxBuffers; i++)
+            {
+                if(_pstBuffers[i].m_inUse == false)
+                {
+                    _pstBuffers[i].m_inUse = true;
+                    return &_pstBuffers[i].m_buffer;
+                }
+            }
+        }
         return nullptr;
     }
 
@@ -46,6 +58,18 @@ public:
     void ReleaseBuffer(T * pBufferToRelease)
     {
         std::unique_lock<std::mutex> lc(_lock);
+
+        if(nullptr != _pstBuffers)
+        {
+            for(int i = 0; i < _i32MaxBuffers; i++)
+            {
+                if(&_pstBuffers[i].m_buffer == pBufferToRelease)
+                {
+                    _pstBuffers[i].m_inUse = false;
+                    break;
+                }
+            }
+        }
     }
 
 private:
