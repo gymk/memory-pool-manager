@@ -28,7 +28,7 @@ int main()
 {
     CFixedSizeBufferPool<Buffer> tst(MAX_BUFFERS);
 
-    std::cout << "Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
+    std::cout << "State: Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
 
     Buffer * pTst[MAX_BUFFERS];
     Buffer * pTst2;
@@ -53,15 +53,25 @@ int main()
     // Check count after releasing each buffer
     for(int i = 0; i <= MAX_BUFFERS; i++)
     {
-        std::cout << "Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
+        std::cout << "Invalid Buffer release test: Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
+        Buffer * pTmp =  pTst[i];
+        pTmp = reinterpret_cast<Buffer*>( (reinterpret_cast<unsigned char *>(pTmp) + 2));
+
+        tst.ReleaseBuffer(pTmp);
+    }
+
+    // Check count after releasing each buffer
+    for(int i = 0; i <= MAX_BUFFERS; i++)
+    {
+        std::cout << "Actual Buffer Release: Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
         tst.ReleaseBuffer(pTst[i]);
     }
-    std::cout << "Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
+    std::cout << "State: Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
     
     // Check whether trying to release the released buffer cause any side-effect ???
     tst.ReleaseBuffer(pTst[0]);
     
-    std::cout << "Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
+    std::cout << "Trying already released buffer: Avaialble " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
 }
 
 /*
