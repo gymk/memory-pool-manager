@@ -74,6 +74,24 @@ public:
         }
     }
 
+    // To check whether pBufferToRelease is part of this pool buffer
+    bool IsThisPoolBuffer(T * pBufferToRelease)
+    {
+        std::unique_lock<std::mutex> lc(_lock);
+
+        if((nullptr != _pstBuffers) && _i32ConsumedCount)
+        {
+            auto result = std::find_if(m_pConsumed.begin(), m_pConsumed.end(), [&](POOL_BUFFER * & m){ return(&m->m_buffer == pBufferToRelease); });
+
+            if(result != std::end(m_pConsumed))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     int GetConsumedCount(void)
     {
         return _i32ConsumedCount;

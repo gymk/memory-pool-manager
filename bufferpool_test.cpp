@@ -43,6 +43,16 @@ int main()
             std::cout << "No more buffer available. Available " << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
     }
 
+    // Check pool buffer validate
+    if(tst.IsThisPoolBuffer(pTst[0]) == false)
+    {
+        std::cout << "Err1: Some issue in Buffer Pool Manager implementation !!!" << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
+    }
+    if(tst.IsThisPoolBuffer(reinterpret_cast<Buffer*>(0xDEADBEEF)))
+    {
+        std::cout << "Err2: Some issue in Buffer Pool Manager implementation !!!" << tst.GetAvaiilableCount() << " Consumed " << tst.GetConsumedCount() << std::endl;
+    }
+
     // Check what happens when no more buffer available
     pTst2 = tst.GetBuffer();
     if(pTst2)
@@ -82,11 +92,11 @@ Output:
 [bufferpool.h:void simple_buffer_manager::CFixedSizeBufferPool<T>::InitBufferPool() [with T = tagRequiredBuffer]:Exit]
 [bufferpool.h:simple_buffer_manager::CFixedSizeBufferPool<T>::CFixedSizeBufferPool(int) [with T = tagRequiredBuffer]:Exit]
 State: Avaialble 5 Consumed 0
-Received buffer 0x14de110 Avaialble 4 Consumed 1
-Received buffer 0x14df110 Avaialble 3 Consumed 2
-Received buffer 0x14e0110 Avaialble 2 Consumed 3
-Received buffer 0x14e1110 Avaialble 1 Consumed 4
-Received buffer 0x14e2110 Avaialble 0 Consumed 5
+Received buffer 0x22bc110 Avaialble 4 Consumed 1
+Received buffer 0x22bd110 Avaialble 3 Consumed 2
+Received buffer 0x22be110 Avaialble 2 Consumed 3
+Received buffer 0x22bf110 Avaialble 1 Consumed 4
+Received buffer 0x22c0110 Avaialble 0 Consumed 5
 No more buffer available. Available 0 Consumed 5
 Invalid Buffer release test: Avaialble 0 Consumed 5
 Invalid Buffer release test: Avaialble 0 Consumed 5
